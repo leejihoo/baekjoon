@@ -2,77 +2,68 @@
 #include<vector>
 using namespace std;
 
-template <typename T>
-void merge(std::vector<T>& t, std::vector<T>& a1, std::vector<T>& a2);
-template <typename T>
-void merge_sort(std::vector<T>& array);
+void heapifyMin(int heap[], int i, int n);
+void buildHeapMin(int heap[], int i, int n);
+void heapifyMax(int heap[], int i, int n);
+void buildHeapMax(int heap[], int i, int n);
 
-int main (void) {
-	vector<int>v;
-	vector<int>shout;
-	int N; //정수의 갯수
-	int x; // 계속 바뀌는 정수값
+int main(void)
+{
+	int N = 0; // 정수의 갯수
+	int arr1[50000];
+	int arr2[50000];
+
 	cin >> N;
 	for (int i = 0; i < N; i++)
 	{
-		cin >> x;
-		v.push_back(x);
-		/*v를 정렬
-		
-		*/
-
-        merge_sort(v);
-
-		if (v.size() % 2 == 0)
+		if (N % 2 == 0)
 		{
-			shout.push_back(v[v.size() / 2 - 1]);
+
 		}
-		else 
+		else
 		{
-			shout.push_back(v[v.size() / 2 ]);
+
 		}
 	}
-
-    for (int i = 0; i < N; i++)
-    {
-        cout << shout[i];
-    }
 }
 
-template <typename T>
-void merge(std::vector<T>& t, std::vector<T>& a1, std::vector<T>& a2) {
-    t.clear();
-    typename std::vector<T>::iterator itr1 = a1.begin();
-    typename std::vector<T>::iterator itr2 = a2.begin();
-
-    while (itr1 != a1.end() || itr2 != a2.end()) {
-        if (itr1 != a1.end() && itr2 != a2.end()) {
-            if (*itr1 < *itr2) {
-                t.push_back(*itr1++);
-            }
-            else {
-                t.push_back(*itr2++);
-            }
-        }
-        else {
-            if (itr1 != a1.end()) {
-                t.push_back(*itr1++);
-            }
-            else {
-                t.push_back(*itr2++);
-            }
-        }
-    }
+void heapifyMin(int heap[], int i, int n) { // 최소힙을 구현하기위해 작은값이 올라감
+	int ai = heap[i];
+	while (i < n / 2) {
+		int j = 2 * i + 1;
+		if (j + 1 < n && heap[j + 1] < heap[j])
+			++j;
+		if (heap[j] >= ai)break;
+		heap[i] = heap[j];
+		i = j;
+	}
+	heap[i] = ai;
 }
 
-template <typename T>
-void merge_sort(std::vector<T>& array) {
-    if (1 < array.size()) {
-        int f = array.size() / 2;
-        std::vector<T> array1(array.begin(), array.begin() + f);
-        merge_sort(array1);
-        std::vector<T> array2(array.begin() + f, array.end());
-        merge_sort(array2);
-        merge(array, array1, array2);
-    }
+void buildHeapMin(int heap[], int i, int n) { //히프화를 왼쪽, 오른쪽 노드둘다해준다.
+	if (i >= n / 2) return;                //또한 그 노드들의 자식들도 모두 해준다.
+	buildHeapMin(heap, 2 * i + 1, n);
+	buildHeapMin(heap, 2 * i + 2, n);
+	heapifyMin(heap, i, n);
+}
+
+
+void heapifyMax(int heap[], int i, int n) { // 최대힙을 구현하기위해 큰값이 올라감
+	int ai = heap[i];
+	while (i < n / 2) {
+		int j = 2 * i + 1;
+		if (j + 1 < n && heap[j + 1] > heap[j])
+			++j;
+		if (heap[j] <= ai)break;
+		heap[i] = heap[j];
+		i = j;
+	}
+	heap[i] = ai;
+}
+
+void buildHeapMax(int heap[], int i, int n) { //히프화를 왼쪽, 오른쪽 노드둘다해준다.
+	if (i >= n / 2) return;                //또한 그 노드들의 자식들도 모두 해준다.
+	buildHeapMax(heap, 2 * i + 1, n);
+	buildHeapMax(heap, 2 * i + 2, n);
+	heapifyMax(heap, i, n);
 }
